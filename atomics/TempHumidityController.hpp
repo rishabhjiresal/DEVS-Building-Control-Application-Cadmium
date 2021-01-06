@@ -72,11 +72,14 @@ class TempHumidityController
 
 typename make_message_bags<output_ports>::type output() const {
   typename make_message_bags<output_ports>::type bags;
+  if(state.temperature>-25 && state.temperature<50) {
   int OUTtemp = state.temperature;
-  int OUTHum = state.humidity;
   get_messages<typename defs::Temperature>(bags).push_back(OUTtemp);
+  }
+  if(state.humidity>0){
+  int OUTHum = state.humidity;
   get_messages<typename defs::Humidity>(bags).push_back(OUTHum);
-
+  }
   return bags;
 }
 

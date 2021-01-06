@@ -43,7 +43,7 @@ using defs=TempHumiditySensor_defs;
     }
 
 		TempHumiditySensor(PinName TempPin) noexcept {
-      new (this) TempHumiditySensor(TempPin, TIME("00:00:00:050"));
+      new (this) TempHumiditySensor(TempPin, TIME("00:01:00:000"));
     		}
 
         TempHumiditySensor(PinName TempPin, TIME rate) noexcept {
@@ -63,9 +63,11 @@ using defs=TempHumiditySensor_defs;
     		using output_ports=std::tuple<typename defs::Tempout, typename defs::Humout>;
 
     		void internal_transition() {
-    			state.lastTemp = state.outputTemp;
-          state.lastHum = state.outputHum;
+    			//state.lastTemp = state.outputTemp;
+          //state.lastHum = state.outputHum;
           state.TempHum->TempHumidity(state.outputTemp, state.outputHum);
+         // printf("Temp = %d \n", state.outputTemp);
+         // printf("Hum = %d \n", state.outputHum);
     			}
 
     		void external_transition(TIME e, typename make_message_bags<input_ports>::type mbs) {
@@ -80,19 +82,18 @@ using defs=TempHumiditySensor_defs;
 
     		typename make_message_bags<output_ports>::type output() const {
     			typename make_message_bags<output_ports>::type bags;
-    			if(state.lastTemp != state.outputTemp) {
-    				int OUT = state.outputTemp;
-    				get_messages<typename defs::Tempout>(bags).push_back(OUT);
-    				}
-            if(state.lastHum != state.outputHum) {
-              int OUT = state.outputHum;
-              get_messages<typename defs::Humout>(bags).push_back(OUT);
-            }
+    			//if(state.lastTemp != state.outputTemp) {
+    				get_messages<typename defs::Tempout>(bags).push_back(state.outputTemp);
+    				//}
+            //if(state.lastHum != state.outputHum) {
+             
+              get_messages<typename defs::Humout>(bags).push_back(state.outputHum);
+            //}
             return bags;
           }
 
     		TIME time_advance() const {
-    			  return pollingRate;
+    			  return TIME("00:01:00");
    		 }
 
    		 friend std::ostringstream& operator<<(std::ostringstream& os, const typename TempHumiditySensor<TIME>::state_type& i) {

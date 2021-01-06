@@ -26,6 +26,7 @@
 #include "../atomics/TempHumidityController.hpp"
 #include "../atomics/ACActuationController.hpp"
 #include "../atomics/TempHumidityFusionControl.hpp"
+#include "../atomics/LCDActuationController.hpp"
 
 #ifdef RT_ARM_MBED
   #include "../mbed.h"
@@ -51,7 +52,12 @@ const char* h8_IN = "./inputs/Humidity_Sensor_Values8.txt";
 const char* h9_IN = "./inputs/Humidity_Sensor_Values9.txt";
 const char* h10_IN = "./inputs/Humidity_Sensor_Values10.txt";
 const char* PA_5 = "./outputs/AC_Values.txt";
-
+const char* PA_10;
+const char* PB_3;
+const char* PB_5;
+const char* PB_4;
+const char* PB_10;
+const char* PA_8;
 #endif
 
 using namespace std;
@@ -99,63 +105,64 @@ int main(int argc, char ** argv) {
   using CoupledModelPtr=std::shared_ptr<cadmium::dynamic::modeling::coupled<TIME>>;
 
   #ifdef RT_ARM_MBED
-  AtomicModelPtr TempHumiditySensor1 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor1", A0);
-  AtomicModelPtr TempHumiditySensor2 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor2", A1);
-  AtomicModelPtr TempHumiditySensor3 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor3", A2);
-  AtomicModelPtr TempHumiditySensor4 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor4", A3);
-  AtomicModelPtr TempHumiditySensor5 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor5", A4);
-  AtomicModelPtr TempHumiditySensor6 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor6", A5);
-  AtomicModelPtr TempHumiditySensor7 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor7", PA_13);
-  AtomicModelPtr TempHumiditySensor8 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor8", PA_14);
-  AtomicModelPtr TempHumiditySensor9 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor9", PA_15);
-  AtomicModelPtr TempHumiditySensor10 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor10", PB_7);
+  AtomicModelPtr TempHumiditySensor1 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor1", PC_10);
+  AtomicModelPtr TempHumiditySensor2 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor2", PC_11);
+  AtomicModelPtr TempHumiditySensor3 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor3", PC_12);
+  AtomicModelPtr TempHumiditySensor4 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor4", PA_15);
+  //AtomicModelPtr TempHumiditySensor5 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor5", PA_14);
+  //AtomicModelPtr TempHumiditySensor6 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor6", A5);
+  //AtomicModelPtr TempHumiditySensor7 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor7", PA_13);
+  //AtomicModelPtr TempHumiditySensor8 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor8", PA_14);
+  //AtomicModelPtr TempHumiditySensor9 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor9", PA_15);
+  //AtomicModelPtr TempHumiditySensor10 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumiditySensor, TIME>("TempHumiditySensor10", PB_7);
   #else
   AtomicModelPtr TempSensor1 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempSensor, TIME>("TempSensor1", t1_IN);
   AtomicModelPtr TempSensor2 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempSensor, TIME>("TempSensor2", t2_IN);
   AtomicModelPtr TempSensor3 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempSensor, TIME>("TempSensor3", t3_IN);
   AtomicModelPtr TempSensor4 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempSensor, TIME>("TempSensor4", t4_IN);
-  AtomicModelPtr TempSensor5 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempSensor, TIME>("TempSensor5", t5_IN);
-  AtomicModelPtr TempSensor6 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempSensor, TIME>("TempSensor6", t6_IN);
-  AtomicModelPtr TempSensor7 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempSensor, TIME>("TempSensor7", t7_IN);
-  AtomicModelPtr TempSensor8 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempSensor, TIME>("TempSensor8", t8_IN);
-  AtomicModelPtr TempSensor9 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempSensor, TIME>("TempSensor9", t9_IN);
-  AtomicModelPtr TempSensor10 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempSensor, TIME>("TempSensor10", t10_IN);
+  //AtomicModelPtr TempSensor5 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempSensor, TIME>("TempSensor5", t5_IN);
+  //AtomicModelPtr TempSensor6 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempSensor, TIME>("TempSensor6", t6_IN);
+  //AtomicModelPtr TempSensor7 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempSensor, TIME>("TempSensor7", t7_IN);
+  //AtomicModelPtr TempSensor8 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempSensor, TIME>("TempSensor8", t8_IN);
+  //AtomicModelPtr TempSensor9 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempSensor, TIME>("TempSensor9", t9_IN);
+  //AtomicModelPtr TempSensor10 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempSensor, TIME>("TempSensor10", t10_IN);
   AtomicModelPtr HumiditySensor1 = cadmium::dynamic::translate::make_dynamic_atomic_model<HumiditySensor, TIME>("HumiditySensor1", h1_IN);
   AtomicModelPtr HumiditySensor2 = cadmium::dynamic::translate::make_dynamic_atomic_model<HumiditySensor, TIME>("HumiditySensor2", h2_IN);
   AtomicModelPtr HumiditySensor3 = cadmium::dynamic::translate::make_dynamic_atomic_model<HumiditySensor, TIME>("HumiditySensor3", h3_IN);
   AtomicModelPtr HumiditySensor4 = cadmium::dynamic::translate::make_dynamic_atomic_model<HumiditySensor, TIME>("HumiditySensor4", h4_IN);
-  AtomicModelPtr HumiditySensor5 = cadmium::dynamic::translate::make_dynamic_atomic_model<HumiditySensor, TIME>("HumiditySensor5", h5_IN);
-  AtomicModelPtr HumiditySensor6 = cadmium::dynamic::translate::make_dynamic_atomic_model<HumiditySensor, TIME>("HumiditySensor6", h6_IN);
-  AtomicModelPtr HumiditySensor7 = cadmium::dynamic::translate::make_dynamic_atomic_model<HumiditySensor, TIME>("HumiditySensor7", h7_IN);
-  AtomicModelPtr HumiditySensor8 = cadmium::dynamic::translate::make_dynamic_atomic_model<HumiditySensor, TIME>("HumiditySensor8", h8_IN);
-  AtomicModelPtr HumiditySensor9 = cadmium::dynamic::translate::make_dynamic_atomic_model<HumiditySensor, TIME>("HumiditySensor9", h9_IN);
-  AtomicModelPtr HumiditySensor10 = cadmium::dynamic::translate::make_dynamic_atomic_model<HumiditySensor, TIME>("HumiditySensor10", h10_IN);
+ // AtomicModelPtr HumiditySensor5 = cadmium::dynamic::translate::make_dynamic_atomic_model<HumiditySensor, TIME>("HumiditySensor5", h5_IN);
+  //AtomicModelPtr HumiditySensor6 = cadmium::dynamic::translate::make_dynamic_atomic_model<HumiditySensor, TIME>("HumiditySensor6", h6_IN);
+  //AtomicModelPtr HumiditySensor7 = cadmium::dynamic::translate::make_dynamic_atomic_model<HumiditySensor, TIME>("HumiditySensor7", h7_IN);
+  //AtomicModelPtr HumiditySensor8 = cadmium::dynamic::translate::make_dynamic_atomic_model<HumiditySensor, TIME>("HumiditySensor8", h8_IN);
+  //AtomicModelPtr HumiditySensor9 = cadmium::dynamic::translate::make_dynamic_atomic_model<HumiditySensor, TIME>("HumiditySensor9", h9_IN);
+  //AtomicModelPtr HumiditySensor10 = cadmium::dynamic::translate::make_dynamic_atomic_model<HumiditySensor, TIME>("HumiditySensor10", h10_IN);
   #endif
   AtomicModelPtr TempHumidityController1 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumidityController, TIME>("TempHumidityController1");
   AtomicModelPtr TempHumidityController2 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumidityController, TIME>("TempHumidityController2");
   AtomicModelPtr TempHumidityController3 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumidityController, TIME>("TempHumidityController3");
   AtomicModelPtr TempHumidityController4 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumidityController, TIME>("TempHumidityController4");
-  AtomicModelPtr TempHumidityController5 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumidityController, TIME>("TempHumidityController5");
-  AtomicModelPtr TempHumidityController6 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumidityController, TIME>("TempHumidityController6");
-  AtomicModelPtr TempHumidityController7 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumidityController, TIME>("TempHumidityController7");
-  AtomicModelPtr TempHumidityController8 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumidityController, TIME>("TempHumidityController8");
-  AtomicModelPtr TempHumidityController9 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumidityController, TIME>("TempHumidityController9");
-  AtomicModelPtr TempHumidityController10 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumidityController, TIME>("TempHumidityController10");
+  //AtomicModelPtr TempHumidityController5 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumidityController, TIME>("TempHumidityController5");
+  //AtomicModelPtr TempHumidityController6 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumidityController, TIME>("TempHumidityController6");
+  //AtomicModelPtr TempHumidityController7 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumidityController, TIME>("TempHumidityController7");
+  //AtomicModelPtr TempHumidityController8 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumidityController, TIME>("TempHumidityController8");
+  //AtomicModelPtr TempHumidityController9 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumidityController, TIME>("TempHumidityController9");
+  //AtomicModelPtr TempHumidityController10 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumidityController, TIME>("TempHumidityController10");
   AtomicModelPtr TempHumidityFusionControl1 = cadmium::dynamic::translate::make_dynamic_atomic_model<TempHumidityFusionControl, TIME>("TempHumidityFusionControl1");
+  AtomicModelPtr LCD1 = cadmium::dynamic::translate::make_dynamic_atomic_model<LCDActuationController, TIME>("LCD1"/*, PA_10, PB_3, PB_5, PB_4, PB_10, PA_8*/);
   AtomicModelPtr ACActuationController1 = cadmium::dynamic::translate::make_dynamic_atomic_model<ACActuationController, TIME>("ACActuationController1");
   AtomicModelPtr pwmOutput1 = cadmium::dynamic::translate::make_dynamic_atomic_model<PwmOutput, TIME>("pwmOutput1", PA_5);
 
   cadmium::dynamic::modeling::Ports iports_TOP = {};
   cadmium::dynamic::modeling::Ports oports_TOP = {};
   #ifdef RT_ARM_MBED
-  cadmium::dynamic::modeling::Models submodels_TOP = {TempHumiditySensor1, TempHumiditySensor2, TempHumiditySensor3, TempHumiditySensor4, TempHumiditySensor5, TempHumiditySensor6,
-  TempHumiditySensor7, TempHumiditySensor8, TempHumiditySensor9, TempHumiditySensor10, TempHumidityController1, TempHumidityController2,
-  TempHumidityController3, TempHumidityController4, TempHumidityController5, TempHumidityController6, TempHumidityController7, TempHumidityController8, TempHumidityController9, TempHumidityController10, TempHumidityFusionControl1, ACActuationController1, pwmOutput1};
+  cadmium::dynamic::modeling::Models submodels_TOP = {TempHumiditySensor1, TempHumiditySensor2, TempHumiditySensor3, TempHumiditySensor4, /*TempHumiditySensor5, TempHumiditySensor6,
+  TempHumiditySensor7, TempHumiditySensor8, TempHumiditySensor9, TempHumiditySensor10,*/ TempHumidityController1, TempHumidityController2,
+  TempHumidityController3, TempHumidityController4, /*TempHumidityController5,*/ LCD1, /*TempHumidityController6, TempHumidityController7, TempHumidityController8, TempHumidityController9, TempHumidityController10, */TempHumidityFusionControl1, ACActuationController1, pwmOutput1};
 #else
-  cadmium::dynamic::modeling::Models submodels_TOP = {TempSensor1, TempSensor2, TempSensor3, TempSensor4, TempSensor5, TempSensor6, TempSensor7, TempSensor8, TempSensor9, TempSensor10,
-HumiditySensor1, HumiditySensor2, HumiditySensor3, HumiditySensor4, HumiditySensor5, HumiditySensor6, HumiditySensor7, HumiditySensor8, HumiditySensor9, HumiditySensor10, TempHumidityController1, TempHumidityController2,
-TempHumidityController3, TempHumidityController4, TempHumidityController5, TempHumidityController6, TempHumidityController7, TempHumidityController8, TempHumidityController9, TempHumidityController10,
-TempHumidityFusionControl1, ACActuationController1, pwmOutput1};
+  cadmium::dynamic::modeling::Models submodels_TOP = {TempSensor1, TempSensor2, TempSensor3, TempSensor4, /*TempSensor5, TempSensor6, TempSensor7, TempSensor8, TempSensor9, TempSensor10,*/
+HumiditySensor1, HumiditySensor2, HumiditySensor3, HumiditySensor4, /*HumiditySensor5, HumiditySensor6, HumiditySensor7, HumiditySensor8, HumiditySensor9, HumiditySensor10, */TempHumidityController1, TempHumidityController2,
+TempHumidityController3, TempHumidityController4, /*TempHumidityController5, TempHumidityController6, TempHumidityController7, TempHumidityController8, TempHumidityController9, TempHumidityController10,*/
+TempHumidityFusionControl1, ACActuationController1, pwmOutput1, LCD1};
 #endif
 
 cadmium::dynamic::modeling::EICs eics_TOP = {};
@@ -167,48 +174,52 @@ cadmium::dynamic::modeling::ICs ics_TOP = {
   cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Tempout, TempHumidityController_defs::TempInput>("TempHumiditySensor2","TempHumidityController2"),
   cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Tempout, TempHumidityController_defs::TempInput>("TempHumiditySensor3","TempHumidityController3"),
   cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Tempout, TempHumidityController_defs::TempInput>("TempHumiditySensor4","TempHumidityController4"),
-  cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Tempout, TempHumidityController_defs::TempInput>("TempHumiditySensor5","TempHumidityController5"),
-  cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Tempout, TempHumidityController_defs::TempInput>("TempHumiditySensor6","TempHumidityController6"),
+  //cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Tempout, TempHumidityController_defs::TempInput>("TempHumiditySensor5","TempHumidityController5"),
+  /*cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Tempout, TempHumidityController_defs::TempInput>("TempHumiditySensor6","TempHumidityController6"),
   cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Tempout, TempHumidityController_defs::TempInput>("TempHumiditySensor7","TempHumidityController7"),
   cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Tempout, TempHumidityController_defs::TempInput>("TempHumiditySensor8","TempHumidityController8"),
   cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Tempout, TempHumidityController_defs::TempInput>("TempHumiditySensor9","TempHumidityController9"),
-  cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Tempout, TempHumidityController_defs::TempInput>("TempHumiditySensor10","TempHumidityController10"),
+  cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Tempout, TempHumidityController_defs::TempInput>("TempHumiditySensor10","TempHumidityController10"),*/
 
   cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Humout, TempHumidityController_defs::HumInput>("TempHumiditySensor1","TempHumidityController1"),
   cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Humout, TempHumidityController_defs::HumInput>("TempHumiditySensor2","TempHumidityController2"),
   cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Humout, TempHumidityController_defs::HumInput>("TempHumiditySensor3","TempHumidityController3"),
   cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Humout, TempHumidityController_defs::HumInput>("TempHumiditySensor4","TempHumidityController4"),
-  cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Humout, TempHumidityController_defs::HumInput>("TempHumiditySensor5","TempHumidityController5"),
-  cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Humout, TempHumidityController_defs::HumInput>("TempHumiditySensor6","TempHumidityController6"),
+  //cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Humout, TempHumidityController_defs::HumInput>("TempHumiditySensor5","TempHumidityController5"),
+  /*cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Humout, TempHumidityController_defs::HumInput>("TempHumiditySensor6","TempHumidityController6"),
   cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Humout, TempHumidityController_defs::HumInput>("TempHumiditySensor7","TempHumidityController7"),
   cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Humout, TempHumidityController_defs::HumInput>("TempHumiditySensor8","TempHumidityController8"),
   cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Humout, TempHumidityController_defs::HumInput>("TempHumiditySensor9","TempHumidityController9"),
-  cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Humout, TempHumidityController_defs::HumInput>("TempHumiditySensor10","TempHumidityController10"),
+  cadmium::dynamic::translate::make_IC<TempHumiditySensor_defs::Humout, TempHumidityController_defs::HumInput>("TempHumiditySensor10","TempHumidityController10"),*/
 
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s1T>("TempHumidityController1", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s2T>("TempHumidityController2", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s3T>("TempHumidityController3", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s4T>("TempHumidityController4", "TempHumidityFusionControl1"),
-  cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s5T>("TempHumidityController5", "TempHumidityFusionControl1"),
-  cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s6T>("TempHumidityController6", "TempHumidityFusionControl1"),
+  //cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s5T>("TempHumidityController5", "TempHumidityFusionControl1"),
+  /*cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s6T>("TempHumidityController6", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s7T>("TempHumidityController7", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s8T>("TempHumidityController8", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s9T>("TempHumidityController9", "TempHumidityFusionControl1"),
-  cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s10T>("TempHumidityController10", "TempHumidityFusionControl1"),
+  cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s10T>("TempHumidityController10", "TempHumidityFusionControl1"),*/
 
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s1H>("TempHumidityController1", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s2H>("TempHumidityController2", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s3H>("TempHumidityController3", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s4H>("TempHumidityController4", "TempHumidityFusionControl1"),
-  cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s5H>("TempHumidityController5", "TempHumidityFusionControl1"),
-  cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s6H>("TempHumidityController6", "TempHumidityFusionControl1"),
+  //cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s5H>("TempHumidityController5", "TempHumidityFusionControl1"),
+  /*cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s6H>("TempHumidityController6", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s7H>("TempHumidityController7", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s8H>("TempHumidityController8", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s9H>("TempHumidityController9", "TempHumidityFusionControl1"),
-  cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s10H>("TempHumidityController10", "TempHumidityFusionControl1"),
+  cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s10H>("TempHumidityController10", "TempHumidityFusionControl1"),*/
 
   cadmium::dynamic::translate::make_IC<TempHumidityFusionControl_defs::outT, ACActuationController_defs::TempFusedInput>("TempHumidityFusionControl1", "ACActuationController1"),
   cadmium::dynamic::translate::make_IC<TempHumidityFusionControl_defs::outH, ACActuationController_defs::HumFusedInput>("TempHumidityFusionControl1", "ACActuationController1"),
+  cadmium::dynamic::translate::make_IC<TempHumidityFusionControl_defs::outT, LCDActuationController_defs::FusionInputT>("TempHumidityFusionControl1", "LCD1"),
+  cadmium::dynamic::translate::make_IC<TempHumidityFusionControl_defs::outH, LCDActuationController_defs::FusionInputH>("TempHumidityFusionControl1", "LCD1"),
+  //cadmium::dynamic::translate::make_IC<ACActuationController_defs::ConditioningLevel, LCDActuationController_defs::ACStatus>("ACActuationController1", "LCD1"),
+
   cadmium::dynamic::translate::make_IC<ACActuationController_defs::ConditioningLevel, pwmOutput_defs::in>("ACActuationController1", "pwmOutput1")
 
 
@@ -227,7 +238,7 @@ cadmium::dynamic::modeling::ICs ics_TOP = {
 
   cadmium::dynamic::translate::make_IC<TempSensor_defs::out, TempHumidityController_defs::TempInput>("TempSensor4","TempHumidityController4"),
   cadmium::dynamic::translate::make_IC<HumiditySensor_defs::out, TempHumidityController_defs::HumInput>("HumiditySensor4","TempHumidityController4"),
-
+/*
   cadmium::dynamic::translate::make_IC<TempSensor_defs::out, TempHumidityController_defs::TempInput>("TempSensor5","TempHumidityController5"),
   cadmium::dynamic::translate::make_IC<HumiditySensor_defs::out, TempHumidityController_defs::HumInput>("HumiditySensor5","TempHumidityController5"),
 
@@ -245,7 +256,7 @@ cadmium::dynamic::modeling::ICs ics_TOP = {
 
   cadmium::dynamic::translate::make_IC<TempSensor_defs::out, TempHumidityController_defs::TempInput>("TempSensor10","TempHumidityController10"),
   cadmium::dynamic::translate::make_IC<HumiditySensor_defs::out, TempHumidityController_defs::HumInput>("HumiditySensor10","TempHumidityController10"),
-
+*/
 
 
 
@@ -253,26 +264,31 @@ cadmium::dynamic::modeling::ICs ics_TOP = {
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s2T>("TempHumidityController2", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s3T>("TempHumidityController3", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s4T>("TempHumidityController4", "TempHumidityFusionControl1"),
-  cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s5T>("TempHumidityController5", "TempHumidityFusionControl1"),
-  cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s6T>("TempHumidityController6", "TempHumidityFusionControl1"),
+  //cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s5T>("TempHumidityController5", "TempHumidityFusionControl1"),
+  /*cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s6T>("TempHumidityController6", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s7T>("TempHumidityController7", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s8T>("TempHumidityController8", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s9T>("TempHumidityController9", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Temperature, TempHumidityFusionControl_defs::s10T>("TempHumidityController10", "TempHumidityFusionControl1"),
-
+*/
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s1H>("TempHumidityController1", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s2H>("TempHumidityController2", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s3H>("TempHumidityController3", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s4H>("TempHumidityController4", "TempHumidityFusionControl1"),
-  cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s5H>("TempHumidityController5", "TempHumidityFusionControl1"),
-  cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s6H>("TempHumidityController6", "TempHumidityFusionControl1"),
+  //cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s5H>("TempHumidityController5", "TempHumidityFusionControl1"),
+  /*cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s6H>("TempHumidityController6", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s7H>("TempHumidityController7", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s8H>("TempHumidityController8", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s9H>("TempHumidityController9", "TempHumidityFusionControl1"),
   cadmium::dynamic::translate::make_IC<TempHumidityController_defs::Humidity, TempHumidityFusionControl_defs::s10H>("TempHumidityController10", "TempHumidityFusionControl1"),
-
+*/
   cadmium::dynamic::translate::make_IC<TempHumidityFusionControl_defs::outT, ACActuationController_defs::TempFusedInput>("TempHumidityFusionControl1", "ACActuationController1"),
   cadmium::dynamic::translate::make_IC<TempHumidityFusionControl_defs::outH, ACActuationController_defs::HumFusedInput>("TempHumidityFusionControl1", "ACActuationController1"),
+
+   cadmium::dynamic::translate::make_IC<TempHumidityFusionControl_defs::outT, LCDActuationController_defs::FusionInputT>("TempHumidityFusionControl1", "LCD1"),
+  cadmium::dynamic::translate::make_IC<TempHumidityFusionControl_defs::outH, LCDActuationController_defs::FusionInputH>("TempHumidityFusionControl1", "LCD1"),
+  cadmium::dynamic::translate::make_IC<ACActuationController_defs::ConditioningLevel, LCDActuationController_defs::ACStatus>("ACActuationController1", "LCD1"),
+
   cadmium::dynamic::translate::make_IC<ACActuationController_defs::ConditioningLevel, pwmOutput_defs::in>("ACActuationController1", "pwmOutput1")
 
 
@@ -287,8 +303,15 @@ CoupledModelPtr TOP = std::make_shared<cadmium::dynamic::modeling::coupled<TIME>
     eocs_TOP,
     ics_TOP
     );
+#ifdef RT_ARM_MBED
+   // cadmium::dynamic::engine::runner<NDTime, logger_top> r(TOP, {0});
 
+      cadmium::dynamic::engine::runner<NDTime, cadmium::logger::not_logger> r(TOP, {0});
+#else
+
+ // cadmium::dynamic::engine::runner<NDTime, log_all> r(TOP, {0});
     cadmium::dynamic::engine::runner<NDTime, logger_top> r(TOP, {0});
+#endif
 
 r.run_until(NDTime("100:00:00:000"));
 #ifndef RT_ARM_MBED

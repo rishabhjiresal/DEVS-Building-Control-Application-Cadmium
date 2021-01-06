@@ -23,8 +23,8 @@ using namespace std;
 
 struct ACActuationController_defs
 {
-        struct TempFusedInput : public in_port<float> { };
-        struct HumFusedInput : public in_port<float> { };
+        struct TempFusedInput : public in_port<int> { };
+        struct HumFusedInput : public in_port<int> { };
     //    struct CO2FusedInput : public in_port<float> { };
         struct ConditioningLevel : public out_port<float> { };
 };
@@ -43,8 +43,8 @@ public:
 
   struct state_type {
     bool active;
-    float tempLevel;
-    float humLevel;
+    int tempLevel;
+    int humLevel;
     int ACLevel; //let's say the level is from 0 to 255
     bool HotORCold; //1 for Heater and 0 for cooler
     }; state_type state;
@@ -80,7 +80,7 @@ public:
     else if(!state.HotORCold && ((state.tempLevel>0 && state.tempLevel<10))) {
         state.ACLevel = 50;
     }
-    else if(!state.HotORCold && ((state.tempLevel>10 && state.tempLevel<20))) {
+    else if(!state.HotORCold && ((state.tempLevel>10 && state.tempLevel<=20))) {
         state.ACLevel = 100;
     }
     else if(!state.HotORCold && ((state.tempLevel>20 && state.tempLevel<30))) {

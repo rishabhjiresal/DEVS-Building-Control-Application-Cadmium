@@ -25,8 +25,8 @@ struct TempHumidityController_defs
 {
         struct TempInput : public in_port<int> { };
         struct HumInput : public in_port<int> { };
-        struct Temperature : public out_port<float> { };
-        struct Humidity : public out_port<float> { };
+        struct Temperature : public out_port<int> { };
+        struct Humidity : public out_port<int> { };
 };
 
 template<typename TIME>
@@ -35,14 +35,14 @@ class TempHumidityController
   using defs=TempHumidityController_defs;
   	public:
       TempHumidityController() noexcept {
-        state.temperature = 0.0;
-        state.humidity = 0.0;
+        state.temperature = 0;
+        state.humidity = 0;
         state.active = false;
       }
 
       struct state_type {
-        float temperature;
-        float humidity;
+        int temperature;
+        int humidity;
         bool active;
         }; state_type state;
 
@@ -72,8 +72,8 @@ class TempHumidityController
 
 typename make_message_bags<output_ports>::type output() const {
   typename make_message_bags<output_ports>::type bags;
-  float OUTtemp = state.temperature;
-  float OUTHum = state.humidity;
+  int OUTtemp = state.temperature;
+  int OUTHum = state.humidity;
   get_messages<typename defs::Temperature>(bags).push_back(OUTtemp);
   get_messages<typename defs::Humidity>(bags).push_back(OUTHum);
 

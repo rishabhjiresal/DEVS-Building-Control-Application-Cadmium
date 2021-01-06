@@ -12,7 +12,7 @@ namespace drivers {
 
     }
 
-    void TempHumidity(int temp, int hum) {
+    void TempHumidity(int &temp, int &hum) {
         dht11.read();
         temp = dht11.getCelsius();
         hum = dht11.getHumidity();

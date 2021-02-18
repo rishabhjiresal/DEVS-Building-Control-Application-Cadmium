@@ -6,6 +6,8 @@ EXECUTABLE_NAME=DEVS_BCA_Cadmium_TOP
 
 INCLUDRT_ARM_MBED=-I ../../cadmium/include
 INCLUDEDESTIMES=-I ../../cadmium/DESTimes/include
+INCLUDEBOOST=-I ../../boost_1_70_0
+
 
 embedded:
 	mbed compile --target $(COMPILE_TARGET) --toolchain GCC_ARM --profile ../cadmium.json
@@ -18,7 +20,7 @@ all: main.o
 	$(CC) -g -o $(EXECUTABLE_NAME) main.o
 
 main.o: main.cpp
-	$(CC) -g -c $(CFLAGS) $(INCLUDRT_ARM_MBED) $(INCLUDEDESTIMES) main.cpp -o main.o
+	$(CC) -g -c $(CFLAGS) $(INCLUDRT_ARM_MBED) $(INCLUDEDESTIMES) $(INCLUDEBOOST) main.cpp -o main.o
 
 clean:
 	rm -f $(EXECUTABLE_NAME) *.o *~
